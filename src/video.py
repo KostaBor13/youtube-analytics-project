@@ -4,6 +4,7 @@ from googleapiclient.discovery import build
 
 
 class Video:
+
     api_key: str = os.getenv('YT_API_KEY')
 
     # создаем специальный объект для работы с API
@@ -13,16 +14,23 @@ class Video:
     def __init__(self, video_id: str) -> None:
         """Экземпляр инициализируется id канала. Дальше все данные будут подтягиваться по API."""
 
-        self.video_id = video_id
-        self.video_response = self.print_info()
-        self.video_title: str = self.video_response['items'][0]['snippet']['title']
-        self.view_count: int = self.video_response['items'][0]['statistics']['viewCount']
-        self.like_count: int = self.video_response['items'][0]['statistics']['likeCount']
-        self.comment_count: int = self.video_response['items'][0]['statistics']['commentCount']
-
+        try:
+            self.video_id = video_id
+            self.video_response = self.print_info()
+            self.title: str = self.video_response['items'][0]['snippet']['title']
+            self.view_count: int = self.video_response['items'][0]['statistics']['viewCount']
+            self.like_count: int = self.video_response['items'][0]['statistics']['likeCount']
+            self.comment_count: int = self.video_response['items'][0]['statistics']['commentCount']
+        except:
+            self.video_response = None
+            self.title = None
+            self.view_count = None
+            self.like_count = None
+            self.comment_count = None
 
     def __str__(self):
-        return self.video_title
+
+        return self.title
 
     def print_info(self) -> None:
         """Выводит в консоль информацию о канале."""
